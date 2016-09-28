@@ -24,9 +24,13 @@ module.exports = function (grunt) {
         });
 
         var phantomOptions = {
-            phantomPath: require('phantomjs2').path,
+            phantomPath: require('phantomjs-prebuilt').path,
             parameters: options.phantomParams || {}
         };
+
+        var renderOptions = options.renderOptions || {
+                quality: 100
+            };
 
         console.log('phantomOptions = ', phantomOptions);
 
@@ -41,13 +45,14 @@ module.exports = function (grunt) {
 
             phantom.create(function (err, ph) {
                 if (err) {
-                    grunt.fail.warn(err.message);
+                    grunt.fail.warn((err && err.message) || err);
                     return;
                 }
                 return ph.createPage(function (err, page) {
                     if (viewport) {
                         var sets = viewport.match(/(\d+)x(\d+)/);
                         if (sets[1] && sets[2]) {
+                            //console.log("Restricting to resolution: " + sets[1] + 'x' + sets[2]);
                             page.set('viewportSize', {
                                 width: sets[1],
                                 height: sets[2]
@@ -74,7 +79,7 @@ module.exports = function (grunt) {
                                     grunt.log.writeln('Delay ' + delay + ' to take a screenshot to ' + target);
                                     ph.exit();
                                     cb();
-                                });
+                                }, renderOptions);
                             }, delay);
                         } else {
                             page.render(path + '/' + target, function () {
