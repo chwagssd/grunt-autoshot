@@ -75,11 +75,11 @@ module.exports = function (grunt) {
 
                         if (delay) {
                             setTimeout(function () {
-                                page.render(path + '/' + target, function () {
+                                page.render(path + '/' + target, renderOptions, function () {
                                     grunt.log.writeln('Delay ' + delay + ' to take a screenshot to ' + target);
                                     ph.exit();
                                     cb();
-                                }, renderOptions);
+                                });
                             }, delay);
                         } else {
                             page.render(path + '/' + target, function () {
