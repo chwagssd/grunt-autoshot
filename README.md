@@ -77,7 +77,10 @@ remote: {
   ]
 }
 ```
+### options.verbose
+Type: Boolean
 
+Default is `false`. Provide `true` to pass all messages from console in the captured page into the active console.
 
 #### options.local
 Type: String

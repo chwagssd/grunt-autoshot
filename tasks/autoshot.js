@@ -20,7 +20,8 @@ module.exports = function (grunt) {
         var options = this.options({
             remote: false,//don't fill in any defaultsc
             local: false,
-            phantomParams: {}
+            phantomParams: {},
+            verbose: false
         });
 
         var phantomOptions = {
@@ -61,6 +62,12 @@ module.exports = function (grunt) {
                     }
                     page.set('zoomFactor', 1);
 
+                    if (options.verbose) {
+                        page.onConsoleMessage = function (msg) {
+                            grunt.log.writeln('CONSOLE: ' + msg);
+                        };
+                    }
+
                     return page.open(src, function (err, status) {
                         var target = type + '-' + viewport + '-' + dest;
 
@@ -72,6 +79,8 @@ module.exports = function (grunt) {
                             style.appendChild(text);
                             document.head.insertBefore(style, document.head.firstChild);
                         });
+
+
 
                         if (delay) {
                             setTimeout(function () {
