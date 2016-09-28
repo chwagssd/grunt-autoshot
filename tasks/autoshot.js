@@ -24,7 +24,7 @@ module.exports = function (grunt) {
         });
 
         var phantomOptions = {
-            phantomPath: require('phantomjs-prebuilt').path,
+            path: require('phantomjs-prebuilt').path,
             parameters: options.phantomParams || {}
         };
 
@@ -43,7 +43,7 @@ module.exports = function (grunt) {
             var dest = opts.dest;
             var delay = opts.delay;
 
-            phantom.create(function (err, ph) {
+            phantom.create(phantomOptions, function (err, ph) {
                 if (err) {
                     grunt.fail.warn((err && err.message) || err);
                     return;
@@ -90,7 +90,7 @@ module.exports = function (grunt) {
                         }
                     });
                 });
-            }, phantomOptions);
+            });
         };
 
         // At least local or remote url should be assigned
