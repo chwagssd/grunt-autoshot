@@ -85,7 +85,7 @@ module.exports = function (grunt) {
                             timerId = 0;
 
                             var s = (Date.now() - startTime) + ' of ' + delay + 'ms';
-                            grunt.log.writeln('CONSOLE: AUTOSHOT TRIGGERED BY console.log("autoshot-ready") after ' + s);
+                            grunt.log.writeln('CONSOLE: AUTOSHOT TRIGGERED after ' + s + ', ' + msg);
 
                             delayedScreenshot();
                         }
