@@ -58,6 +58,30 @@ grunt.initConfig({
 })
 ```
 
+### Using "delay"
+
+`delay' is a value in milliseconds. After the browser is opened, we will wait this long before attempting the screenshot.
+
+### Using "delay" together with the ability to force a screenshot from the loaded page
+
+If you want to use `delay` as a safe maximum time, and bypass it from the page you are loading (because for example you know you've loaded all the data you need to for the page to be ready), you may `console.log("autoshot-ready")` in the page to abort the delay and take the screenshot at that moment.
+
+For example, if you are waiting for data to load, so have `delay=10000` (10 seconds):
+
+```javascript
+var x = new XMLHttpRequest(); 
+x.open('GET', 'http://myapi.com/someService', true);
+x.onReadyStateChange = function(){
+    if(this.readyState === 4){
+        document.body.innerHTML = "Loaded the data! <br />" + this.responseText;
+        
+        //force the screenshot, no need to keep waiting
+        console.log("autoshot-ready");
+    }
+}
+x.send();
+````
+
 ### Options
 
 #### options.path
