@@ -10,6 +10,11 @@
   <p></p>
   <script>
     var cells = document.getElementsByTagName('p');
+
+    setTimeout(function(){
+      console.log("autoshot-ready");
+    }, 1000);
+
     setTimeout(function() {
         cells[0].innerHTML = 'Just a testing';
     }, 4000);

@@ -43,6 +43,8 @@ module.exports = function (grunt) {
             var src = opts.src;
             var dest = opts.dest;
             var delay = opts.delay;
+            var timerId;
+            var target;
 
             phantom.create(phantomOptions, function (err, ph) {
                 if (err) {
@@ -60,16 +62,35 @@ module.exports = function (grunt) {
                             });
                         }
                     }
-                    page.set('zoomFactor', 1);
 
-                    if (options.verbose) {
-                        page.onConsoleMessage = function (msg) {
-                            grunt.log.writeln('CONSOLE: ' + msg);
-                        };
+                    function delayedScreenshot(){
+                        page.render(path + '/' + target, renderOptions, function () {
+                            grunt.log.writeln('Delay ' + delay + ' to take a screenshot to ' + target);
+                            ph.exit();
+                            cb();
+                        });
                     }
 
+                    page.set('zoomFactor', 1);
+
+                    page.onConsoleMessage = function (msg) {
+                        if (options.verbose) {
+                            grunt.log.writeln('CONSOLE: ' + msg);
+                        }
+
+                        //no need to wait for delay, it was bypassed by "autoshot-ready" appearing
+                        if(msg && msg.indexOf && msg.indexOf('autoshot-ready') !== -1) {
+                            clearTimeout(timerId);
+                            timerId = 0;
+
+                            grunt.log.writeln('CONSOLE: <AUTOSHOT TRIGGERED BY console.log("autoshot-ready")>');
+
+                            delayedScreenshot();
+                        }
+                    };
+
                     return page.open(src, function (err, status) {
-                        var target = type + '-' + viewport + '-' + dest;
+                        target = type + '-' + viewport + '-' + dest;
 
                         // Background problem under self-host server
                         page.evaluate(function () {
@@ -81,15 +102,8 @@ module.exports = function (grunt) {
                         });
 
 
-
                         if (delay) {
-                            setTimeout(function () {
-                                page.render(path + '/' + target, renderOptions, function () {
-                                    grunt.log.writeln('Delay ' + delay + ' to take a screenshot to ' + target);
-                                    ph.exit();
-                                    cb();
-                                });
-                            }, delay);
+                            timerId = setTimeout(delayedScreenshot.bind(this, target), delay);
                         } else {
                             page.render(path + '/' + target, function () {
                                 grunt.log.writeln('Take a screenshot to ' + target);
