@@ -45,6 +45,7 @@ module.exports = function (grunt) {
             var delay = opts.delay;
             var timerId;
             var target;
+            var startTime;
 
             phantom.create(phantomOptions, function (err, ph) {
                 if (err) {
@@ -83,7 +84,8 @@ module.exports = function (grunt) {
                             clearTimeout(timerId);
                             timerId = 0;
 
-                            grunt.log.writeln('CONSOLE: <AUTOSHOT TRIGGERED BY console.log("autoshot-ready")>');
+                            var s = (Date.now() - startTime) + ' of ' + delay + 'ms';
+                            grunt.log.writeln('CONSOLE: AUTOSHOT TRIGGERED BY console.log("autoshot-ready") after ' + s);
 
                             delayedScreenshot();
                         }
@@ -103,6 +105,7 @@ module.exports = function (grunt) {
 
 
                         if (delay) {
+                            startTime = Date.now();
                             timerId = setTimeout(delayedScreenshot.bind(this, target), delay);
                         } else {
                             page.render(path + '/' + target, function () {
