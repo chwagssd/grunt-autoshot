@@ -64,9 +64,11 @@ module.exports = function (grunt) {
                         }
                     }
 
-                    function delayedScreenshot(){
+                    function delayedScreenshot(forced){
                         page.render(path + '/' + target, renderOptions, function () {
-                            grunt.log.writeln('Delay ' + delay + ' to take a screenshot to ' + target);
+                            if(!forced) {
+                                grunt.log.writeln('Done with delay of ' + delay + ' to take a screenshot to ' + target);
+                            }
                             ph.exit();
                             cb();
                         });
@@ -85,9 +87,9 @@ module.exports = function (grunt) {
                             timerId = 0;
 
                             var s = (Date.now() - startTime) + ' of ' + delay + 'ms';
-                            grunt.log.writeln('  >> AUTOSHOT TRIGGERED after ' + s + ', ' + msg);
+                            grunt.log.writeln('  >> AUTOSHOT TRIGGERED after ' + s + ' to ' + target + ', ' + msg);
 
-                            delayedScreenshot();
+                            delayedScreenshot(true);
                         }
                     };
 
