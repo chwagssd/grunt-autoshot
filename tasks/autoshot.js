@@ -87,7 +87,7 @@ module.exports = function (grunt) {
                             timerId = 0;
 
                             var s = (Date.now() - startTime) + ' of ' + delay + 'ms';
-                            grunt.log.writeln('  >> AUTOSHOT TRIGGERED after ' + s + ' to ' + target + ', ' + msg);
+                            grunt.log.writeln('Done with delay ' + s + ' since TRIGGERED by page screenshot to ' + target + ', which logged: "' + msg + '"');
 
                             delayedScreenshot(true);
                         }
@@ -108,7 +108,7 @@ module.exports = function (grunt) {
 
                         if (delay) {
                             startTime = Date.now();
-                            timerId = setTimeout(delayedScreenshot.bind(this, target), delay);
+                            timerId = setTimeout(delayedScreenshot, delay);
                         } else {
                             page.render(path + '/' + target, function () {
                                 grunt.log.writeln('Take a screenshot to ' + target);
